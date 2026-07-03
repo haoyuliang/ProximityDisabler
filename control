@@ -1,9 +1,9 @@
-Package: com.yourname.proximitydisabler
+Package: com.haoyuliang.proximitydisabler
 Name: ProximityDisabler
-Version: 1.0
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: Disable proximity sensor for third-party call apps on TrollStore
-Maintainer: Your Name
-Author: Grok Assisted
+Description: Disable proximity sensor for all applications.
+Maintainer: haoyuliang
+Author: haoyuliang
 Section: Tweaks
-Depends: firmware (>= 16.0)
+Depends: mobilesubstrate
