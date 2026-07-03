@@ -3,36 +3,39 @@ name: Build ProximityDisabler
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:   # 手动触发
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-15   # 使用较新的 macOS
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Theos dependencies
+      - name: Install Dependencies
         run: |
-          brew install ldid xz
+          brew install ldid xz coreutils
           sudo mkdir -p /opt/theos
-          sudo chown -R $USER /opt/theos
+          sudo chown -R $(whoami) /opt/theos
+
+      - name: Clone Theos
+        run: |
           git clone --recursive https://github.com/theos/theos.git /opt/theos
 
-      - name: Set up Theos
+      - name: Setup Theos Environment
         run: |
-          echo "export THEOS=/opt/theos" >> $GITHUB_ENV
-          echo "export PATH=\$THEOS/bin:\$PATH" >> $GITHUB_ENV
+          echo "THEOS=/opt/theos" >> $GITHUB_ENV
+          echo "PATH=/opt/theos/bin:$PATH" >> $GITHUB_ENV
 
-      - name: Build the tweak
+      - name: Build Tweak
         run: |
-          make clean
-          make package
+          ls -la
+          make clean || true
+          make package FINALPACKAGE=1
 
-      - name: Upload artifact
+      - name: Upload .deb
         uses: actions/upload-artifact@v4
         with:
-          name: ProximityDisabler-Deb
+          name: ProximityDisabler
           path: packages/*.deb
